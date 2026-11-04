@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Happy Monthsary TOTSSKY!</title>
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=allura:400|nunito:500,700" rel="stylesheet">
+    <style>
+        :root {
+            --rose: #e85d75;
+            --deep-rose: #bd3d63;
+            --pink: #ffe4ec;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            min-height: 100%;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        body {
+            font-family: "Nunito", sans-serif;
+            background: linear-gradient(160deg, #fff1f5 0%, #ffdbe7 55%, #ffc9da 100%);
+            color: #9d3854;
+        }
+
+        .page {
+            position: relative;
+            min-height: 100dvh;
+            display: grid;
+            place-items: center;
+            overflow: hidden;
+            padding: max(20px, env(safe-area-inset-top)) 16px max(20px, env(safe-area-inset-bottom));
+        }
+
+        .surprise-button {
+            position: relative;
+            z-index: 20;
+            width: min(82vw, 330px);
+            min-height: 72px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            border: 0;
+            border-radius: 999px;
+            padding: 18px 22px;
+            cursor: pointer;
+            color: #fff;
+            font: 700 17px/1.25 "Nunito", sans-serif;
+            background: linear-gradient(135deg, #ed7892, #c94c70);
+            box-shadow:
+                0 14px 32px rgba(202, 71, 109, 0.28),
+                0 0 22px rgba(255, 255, 255, 0.9),
+                inset 0 1px 0 rgba(255, 255, 255, 0.55);
+            -webkit-tap-highlight-color: transparent;
+            animation: buttonGlow 1.8s ease-in-out infinite;
+            transition: transform 180ms ease, opacity 500ms ease, filter 300ms ease;
+        }
+
+        .surprise-button:active {
+            transform: scale(0.96);
+        }
+
+        .surprise-button.fading {
+            opacity: 0;
+            filter: blur(5px);
+            transform: scale(1.12);
+            pointer-events: none;
+        }
+
+        .surprise-button.removed {
+            display: none;
+        }
+
+        .reveal {
+            position: absolute;
+            inset: 0;
+            z-index: 10;
+            width: 100%;
+            max-width: 430px;
+            max-height: calc(100dvh - 40px);
+            margin: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: clamp(14px, 2.5dvh, 24px);
+            opacity: 0;
+            transform: translateY(18px);
+            visibility: hidden;
+        }
+
+        .reveal.visible {
+            visibility: visible;
+            animation: revealContent 900ms 180ms ease-out forwards;
+        }
+
+        .greeting {
+            margin: 0;
+            text-align: center;
+            color: var(--deep-rose);
+            font-family: "Allura", cursive;
+            font-size: clamp(38px, 12vw, 58px);
+            font-weight: 400;
+            line-height: 1.05;
+            text-shadow: 0 3px 0 rgba(255, 255, 255, 0.75), 0 8px 20px rgba(177, 61, 96, 0.12);
+        }
+
+        .photos {
+            width: 100%;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: clamp(10px, 3vw, 16px);
+        }
+
+        .polaroid {
+            margin: 0;
+            padding: 7px 7px 12px;
+            background: rgba(255, 255, 255, 0.96);
+            border-radius: 4px;
+            box-shadow: 0 9px 22px rgba(164, 58, 91, 0.15);
+            opacity: 0;
+            transform: scale(0.82) rotate(0deg);
+        }
+
+        .reveal.visible .polaroid {
+            animation: photoIn 650ms cubic-bezier(.2, .75, .25, 1) forwards;
+        }
+
+        .reveal.visible .polaroid:nth-child(1) { animation-delay: 500ms; }
+        .reveal.visible .polaroid:nth-child(2) { animation-delay: 620ms; }
+        .reveal.visible .polaroid:nth-child(3) { animation-delay: 740ms; }
+        .reveal.visible .polaroid:nth-child(4) { animation-delay: 860ms; }
+
+        .polaroid:nth-child(1) { --tilt: -3deg; }
+        .polaroid:nth-child(2) { --tilt: 3deg; }
+        .polaroid:nth-child(3) { --tilt: 2.5deg; }
+        .polaroid:nth-child(4) { --tilt: -2.5deg; }
+
+        .polaroid img {
+            display: block;
+            width: 100%;
+            aspect-ratio: 4 / 5;
+            object-fit: cover;
+            border-radius: 2px;
+            background: #ffdce6;
+        }
+
+        .polaroid::after {
+            content: "♡";
+            display: block;
+            height: 5px;
+            margin-top: 4px;
+            text-align: center;
+            color: #d96a84;
+            font-size: 13px;
+            line-height: 1;
+        }
+
+        .particle {
+            position: fixed;
+            z-index: 30;
+            left: var(--left);
+            bottom: -60px;
+            user-select: none;
+            pointer-events: none;
+            font-size: var(--size);
+            filter: drop-shadow(0 4px 4px rgba(159, 43, 79, 0.12));
+            animation: floatUp var(--duration) var(--delay) cubic-bezier(.16, .68, .35, 1) forwards;
+        }
+
+        @keyframes buttonGlow {
+            0%, 100% { box-shadow: 0 14px 32px rgba(202, 71, 109, 0.28), 0 0 18px rgba(255,255,255,.75); }
+            50% { box-shadow: 0 16px 38px rgba(202, 71, 109, 0.38), 0 0 34px rgba(255, 178, 199, .95); }
+        }
+
+        @keyframes revealContent {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes photoIn {
+            0% { opacity: 0; transform: scale(0.82) rotate(0deg) translateY(16px); }
+            100% { opacity: 1; transform: scale(1) rotate(var(--tilt)) translateY(0); }
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translate3d(0, 0, 0) rotate(0deg) scale(0.4);
+                opacity: 0;
+            }
+            12% {
+                opacity: 1;
+                transform: translate3d(var(--sway-a), -12vh, 0) rotate(25deg) scale(1);
+            }
+            55% {
+                opacity: 1;
+                transform: translate3d(var(--sway-b), -55vh, 0) rotate(-18deg) scale(1.05);
+            }
+            100% {
+                transform: translate3d(var(--sway-c), -118vh, 0) rotate(180deg) scale(.75);
+                opacity: 0;
+            }
+        }
+
+        @media (max-height: 620px) {
+            .page {
+                padding-block: 12px;
+            }
+
+            .reveal {
+                gap: 10px;
+            }
+
+            .greeting {
+                font-size: clamp(34px, 10vw, 46px);
+            }
+
+            .polaroid img {
+                aspect-ratio: 1 / 1;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .surprise-button {
+                animation: none;
+            }
+
+            .particle {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="page">
+        <button class="surprise-button" id="surpriseButton" type="button">
+            Click to See my surprise
+        </button>
+
+        <section class="reveal" id="reveal" aria-live="polite">
+            <h1 class="greeting">Happy Monthsary TOTSSKY!</h1>
+            <div class="photos">
+                <figure class="polaroid">
+                    <img src="images/photo1.jpg" alt="Monthsary memory 1">
+                </figure>
+                <figure class="polaroid">
+                    <img src="images/photo2.jpg" alt="Monthsary memory 2">
+                </figure>
+                <figure class="polaroid">
+                    <img src="images/photo3.jpg" alt="Monthsary memory 3">
+                </figure>
+                <figure class="polaroid">
+                    <img src="images/photo4.jpg" alt="Monthsary memory 4">
+                </figure>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const button = document.getElementById("surpriseButton");
+        const reveal = document.getElementById("reveal");
+        const symbols = ["❤️", "💖", "🌸", "🌷"];
+        let hasOpened = false;
+
+        function createParticles(count = 54) {
+            const fragment = document.createDocumentFragment();
+
+            for (let i = 0; i < count; i++) {
+                const particle = document.createElement("span");
+                particle.className = "particle";
+                particle.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+                particle.setAttribute("aria-hidden", "true");
+
+                particle.style.setProperty("--left", `${4 + Math.random() * 92}vw`);
+                particle.style.setProperty("--size", `${16 + Math.random() * 18}px`);
+                particle.style.setProperty("--duration", `${3 + Math.random() * 2.4}s`);
+                particle.style.setProperty("--delay", `${Math.random() * 0.55}s`);
+                particle.style.setProperty("--sway-a", `${-18 + Math.random() * 36}px`);
+                particle.style.setProperty("--sway-b", `${-34 + Math.random() * 68}px`);
+                particle.style.setProperty("--sway-c", `${-42 + Math.random() * 84}px`);
+
+                fragment.appendChild(particle);
+                particle.addEventListener("animationend", () => particle.remove(), { once: true });
+            }
+
+            document.body.appendChild(fragment);
+        }
+
+        button.addEventListener("click", () => {
+            if (hasOpened) return;
+            hasOpened = true;
+
+            button.classList.add("fading");
+            window.setTimeout(() => button.classList.add("removed"), 520);
+
+            createParticles();
+            reveal.classList.add("visible");
+        });
+    </script>
+</body>
+</html>
